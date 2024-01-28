@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="row-auto pb-3 pt-3">
+    <div class="col-span-12 text-center">
+      <h1 class="font-semibold text-3xl">Kanban Board (Primed e-health)</h1>
+    </div>
+  </div>
+  <div class="row-auto"></div>
+  <div class="col-span-12 border-red-300">
+    <div class="flex max-w-[1200px]">
+      <div
+        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
+        (drop)="onDrop($event, 'Open')"
+        (dragover)="onDragOver($event)"
+      >
+        <h2 class="text-lg mb-3 font-semibold">Open</h2>
+        <div
+          class="bg-slate-50 rounded p-2 mb-2"
+          *ngFor="let item of filterTasks('Open')"
+          (dragstart)="onDragStart(item)"
+          draggable="true"
+        >
+          <span class="font-semibold"> {{ item.taskId }}</span>
+          <br />
+          {{ item.taskName }}
+        </div>
+      </div>
+      <div
+        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
+        (drop)="onDrop($event, 'Pending')"
+        (dragover)="onDragOver($event)"
+      >
+        <h2 class="text-lg mb-3 font-semibold">Pending</h2>
+        <div
+          class="bg-slate-50 rounded p-2 mb-2"
+          *ngFor="let item of filterTasks('Pending')"
+          (dragstart)="onDragStart(item)"
+          draggable="true"
+        >
+          <span class="font-semibold"> {{ item.taskId }}</span>
+          <br />
+          {{ item.taskName }}
+        </div>
+      </div>
+      <div
+        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
+        (drop)="onDrop($event, 'In Progress')"
+        (dragover)="onDragOver($event)"
+      >
+        <h2 class="text-lg mb-3 font-semibold">In Progress</h2>
+        <div
+          class="bg-slate-50 rounded p-2 mb-2"
+          *ngFor="let item of filterTasks('In Progress')"
+          (dragstart)="onDragStart(item)"
+          draggable="true"
+        >
+          <span class="font-semibold"> {{ item.taskId }}</span>
+          <br />
+          {{ item.taskName }}
+        </div>
+      </div>
+      <div
+        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
+        (drop)="onDrop($event, 'Completed')"
+        (dragover)="onDragOver($event)"
+      >
+        <h2 class="text-lg mb-3 font-semibold">Completed</h2>
+        <div
+          class="bg-slate-50 rounded p-2 mb-2"
+          *ngFor="let item of filterTasks('Completed')"
+          (dragstart)="onDragStart(item)"
+          draggable="true"
+        >
+          <span class="font-semibold"> {{ item.taskId }}</span>
+          <br />
+          {{ item.taskName }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
