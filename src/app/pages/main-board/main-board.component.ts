@@ -1,128 +1,295 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ITask } from 'src/app/model/task';
 
 @Component({
   selector: 'app-main-board',
   templateUrl: './main-board.component.html',
   styleUrls: ['./main-board.component.css'],
 })
-export class MainBoardComponent {
+export class MainBoardComponent implements OnInit {
   currentDragTask: any;
 
-  tasksArray: any[] = [
+  newTaskForm!: FormGroup;
+  duplicateTaskError: string = '';
+  editTaskIndex!: any;
+  isEditMode: boolean = false;
+
+  tasks: ITask[] = [
     {
-      taskId: 'kanban-001',
-      taskName: 'Layout Page',
+      title: 'kanban-001',
+      description: 'Layout Page',
       status: 'In Progress',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-002',
-      taskName: 'Change button',
+      title: 'kanban-002',
+      description: 'Change button',
       status: 'In Progress',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-003',
-      taskName: 'Reset Password',
+      title: 'kanban-00',
+      description: 'Reset Password',
       status: 'In Progress',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-004',
-      taskName: 'home Page',
+      title: 'kanban-004',
+      description: 'home Page',
       status: 'open',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-005',
-      taskName: 'Reset Password',
+      title: 'kanban-005',
+      description: 'Reset Password xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       status: 'Open',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-006',
-      taskName: 'home Page',
+      title: 'kanban-006',
+      description: 'home Page',
       status: 'open',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-007',
-      taskName: 'Reset Password',
+      title: 'kanban-007',
+      description: 'Reset Password',
       status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-008',
-      taskName: 'home Page',
+      title: 'kanban-008',
+      description: 'home Page',
       status: 'open',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-009',
-      taskName: 'Reset Password',
+      title: 'kanban-009',
+      description: 'Reset Password',
       status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-010',
-      taskName: 'home Page',
+      title: 'kanban-010',
+      description: 'home Page',
       status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-011',
-      taskName: 'Reset Password',
+      title: 'kanban-011',
+      description: 'Reset Password',
       status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-012',
-      taskName: 'Reset Password',
+      title: 'kanban-012',
+      description: 'Reset Password',
       status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-013',
-      taskName: 'home Page',
+      title: 'kanban-013',
+      description: 'home Page',
       status: 'open',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-014',
-      taskName: 'Reset Password',
+      title: 'kanban-014',
+      description: 'Reset Password',
       status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-015',
-      taskName: 'home Page',
+      title: 'kanban-015',
+      description: 'home Page',
       status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-016',
-      taskName: 'Reset Password',
+      title: 'kanban-016',
+      description: 'Reset Password',
       status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-017',
-      taskName: 'Reset Password',
+      title: 'kanban-017',
+      description: 'Reset Password',
       status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-018',
-      taskName: 'home Page',
+      title: 'kanban-018',
+      description: 'home Page',
       status: 'open',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-019',
-      taskName: 'Reset Password',
+      title: 'kanban-019',
+      description: 'Reset Password',
       status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-020',
-      taskName: 'home Page',
+      title: 'kanban-020',
+      description: 'home Page',
       status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-021',
-      taskName: 'Reset Password',
+      title: 'kanban-021',
+      description: 'Reset Password',
       status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
     },
     {
-      taskId: 'kanban-022',
-      taskName: 'home Page',
+      title: 'kanban-022',
+      description: 'home Page',
       status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-019',
+      description: 'Reset Password',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-020',
+      description: 'home Page',
+      status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-021',
+      description: 'Reset Password',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-022',
+      description: 'home Page',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-019',
+      description: 'Reset Password',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-020',
+      description: 'home Page',
+      status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-021',
+      description: 'Reset Password',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-022',
+      description: 'home Page',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-019',
+      description: 'Reset Password',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-020',
+      description: 'home Page',
+      status: 'Pending',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-021',
+      description: 'Reset Password',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
+    },
+    {
+      title: 'kanban-022',
+      description: 'home Page',
+      status: 'Completed',
+      dueDate: Date.now().toLocaleString(),
     },
   ];
 
+  constructor(private fb: FormBuilder) {}
+  ngOnInit(): void {
+    this.newTaskForm = this.fb.group({
+      title: ['', Validators.required],
+      description: ['', Validators.required],
+      dueDate: ['', Validators.required],
+    });
+  }
+
+  addTask(title: string) {
+    const existingTask = this.tasks.find((task) => task.title == title);
+    if (existingTask) {
+      this.duplicateTaskError = 'Task already exists!';
+    } else {
+      this.tasks.push({
+        title: this.newTaskForm.value.title,
+        description: this.newTaskForm.value.description,
+        status: 'Open',
+        dueDate: this.newTaskForm.value.dueDate,
+      });
+      this.duplicateTaskError = '';
+      this.newTaskForm.reset();
+    }
+  }
+
+  deleteTask(title: string) {
+    const index = this.tasks.findIndex((task) => task.title === title);
+    if (index !== -1) {
+      this.tasks.splice(index, 1);
+    }
+  }
+  onEdit(task: ITask, title: string) {
+    const index = this.tasks.findIndex((task) => task.title === title);
+    this.editTaskIndex = index;
+    if (index !== -1) {
+      this.newTaskForm.controls['title'].setValue(task.title);
+      this.newTaskForm.controls['description'].setValue(task.description);
+      this.newTaskForm.controls['dueDate'].setValue(task.dueDate);
+      this.isEditMode = true;
+    }
+  }
+
+  updateTask(title: string) {
+    const existingTask = this.tasks.find((task) => task.title == title);
+    if (existingTask) {
+      this.duplicateTaskError = 'Task already exists!';
+    } else {
+      // this.tasks.push({
+      //   title: this.newTaskForm.value.title,
+      //   description: this.newTaskForm.value.description,
+      //   status: 'Open',
+      //   dueDate: Date.now().toLocaleString(),
+      // });
+      (this.tasks[this.editTaskIndex].title = this.newTaskForm.value.title),
+        (this.tasks[this.editTaskIndex].description =
+          this.newTaskForm.value.description),
+        (this.tasks[this.editTaskIndex].dueDate =
+          this.newTaskForm.value.dueDate),
+        (this.duplicateTaskError = '');
+
+      this.newTaskForm.reset();
+      this.editTaskIndex = undefined;
+      this.isEditMode = false;
+    }
+  }
+
   filterTasks(status: string) {
-    return this.tasksArray.filter((task) => task.status === status);
+    return this.tasks.filter((task) => task.status === status);
   }
 
   onDragStart(task: any) {
@@ -136,8 +303,8 @@ export class MainBoardComponent {
   onDrop(event: any, status: string) {
     event.preventDefault();
     console.log('drop');
-    const record = this.tasksArray.find(
-      (task) => task.taskId == this.currentDragTask.taskId
+    const record = this.tasks.find(
+      (task) => task.title == this.currentDragTask.title
     );
     if (record) {
       record.status = status;

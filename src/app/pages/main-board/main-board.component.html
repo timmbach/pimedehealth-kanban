@@ -4,75 +4,281 @@
       <h1 class="font-semibold text-3xl">Kanban Board (Primed e-health)</h1>
     </div>
   </div>
-  <div class="row-auto"></div>
-  <div class="col-span-12 border-red-300">
-    <div class="flex max-w-[1200px]">
+  <div class="row-auto">
+    <div class="flex">
       <div
-        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
-        (drop)="onDrop($event, 'Open')"
-        (dragover)="onDragOver($event)"
+        class="max-w-md mx-auto bg-white rounded p-6 shadow-md max-h-[440px] mr-10"
       >
-        <h2 class="text-lg mb-3 font-semibold">Open</h2>
-        <div
-          class="bg-slate-50 rounded p-2 mb-2"
-          *ngFor="let item of filterTasks('Open')"
-          (dragstart)="onDragStart(item)"
-          draggable="true"
-        >
-          <span class="font-semibold"> {{ item.taskId }}</span>
-          <br />
-          {{ item.taskName }}
-        </div>
+        <h2 class="text-2xl font-semibold mb-3">Add a new Task</h2>
+        <p class="text-red-600 font-semibold italic mb-1">
+          {{ duplicateTaskError }}
+        </p>
+        <form [formGroup]="newTaskForm">
+          <div class="mb-3">
+            <label
+              for="title"
+              class="block text-gray-700 text-sm font-medium mb-2"
+              >Task Title</label
+            >
+            <input
+              formControlName="title"
+              type="text"
+              id="title"
+              name="title"
+              class="w-full px-3 py-2 border rounded-md"
+            />
+            <i
+              class="text-red-400 italic"
+              *ngIf="
+                newTaskForm.get('title')?.hasError('required') &&
+                newTaskForm.get('title')?.touched
+              "
+            >
+              Enter a title.
+            </i>
+          </div>
+
+          <div class="mb-3">
+            <label
+              for="email"
+              class="block text-gray-700 text-sm font-medium mb-2"
+              >Task description</label
+            >
+            <input
+              formControlName="description"
+              type="text"
+              id="desc"
+              name="desc"
+              class="w-full px-3 py-2 border rounded-md"
+            />
+            <i
+              class="text-red-400 italic"
+              *ngIf="
+                newTaskForm.get('description')?.hasError('required') &&
+                newTaskForm.get('description')?.touched
+              "
+            >
+              Enter a description.
+            </i>
+          </div>
+
+          <div class="mb-3">
+            <label
+              for="dueDate"
+              class="block text-gray-700 text-sm font-medium mb-2"
+              >Due Date:</label
+            >
+            <input
+              formControlName="dueDate"
+              type="date"
+              id="dueDate"
+              name="dueDate"
+              class="w-full px-3 py-2 border rounded-md"
+            />
+            <i
+              class="text-red-400 italic"
+              *ngIf="
+                newTaskForm.get('dueDate')?.hasError('required') &&
+                newTaskForm.get('dueDate')?.touched
+              "
+            >
+              Enter due date.
+            </i>
+          </div>
+
+          <button
+            type="submit"
+            *ngIf="!isEditMode"
+            [disabled]="newTaskForm.invalid"
+            class="bg-slate-300 text-black px-6 py-2 font-semibold rounded-md hover:bg-slate-400"
+            (click)="addTask(newTaskForm.get('title')?.value)"
+          >
+            Add
+          </button>
+          <button
+            type="submit"
+            *ngIf="isEditMode"
+            [disabled]="newTaskForm.invalid"
+            class="bg-slate-300 text-black px-6 py-2 font-semibold rounded-md hover:bg-slate-400"
+            (click)="updateTask(newTaskForm.get('title')?.value)"
+          >
+            Update
+          </button>
+        </form>
       </div>
-      <div
-        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
-        (drop)="onDrop($event, 'Pending')"
-        (dragover)="onDragOver($event)"
-      >
-        <h2 class="text-lg mb-3 font-semibold">Pending</h2>
-        <div
-          class="bg-slate-50 rounded p-2 mb-2"
-          *ngFor="let item of filterTasks('Pending')"
-          (dragstart)="onDragStart(item)"
-          draggable="true"
-        >
-          <span class="font-semibold"> {{ item.taskId }}</span>
-          <br />
-          {{ item.taskName }}
-        </div>
-      </div>
-      <div
-        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
-        (drop)="onDrop($event, 'In Progress')"
-        (dragover)="onDragOver($event)"
-      >
-        <h2 class="text-lg mb-3 font-semibold">In Progress</h2>
-        <div
-          class="bg-slate-50 rounded p-2 mb-2"
-          *ngFor="let item of filterTasks('In Progress')"
-          (dragstart)="onDragStart(item)"
-          draggable="true"
-        >
-          <span class="font-semibold"> {{ item.taskId }}</span>
-          <br />
-          {{ item.taskName }}
-        </div>
-      </div>
-      <div
-        class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md"
-        (drop)="onDrop($event, 'Completed')"
-        (dragover)="onDragOver($event)"
-      >
-        <h2 class="text-lg mb-3 font-semibold">Completed</h2>
-        <div
-          class="bg-slate-50 rounded p-2 mb-2"
-          *ngFor="let item of filterTasks('Completed')"
-          (dragstart)="onDragStart(item)"
-          draggable="true"
-        >
-          <span class="font-semibold"> {{ item.taskId }}</span>
-          <br />
-          {{ item.taskName }}
+      <div class="col-span-12 border-red-300">
+        <div class="flex max-w-[1200px]">
+          <div
+            class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md columnWrap no-scrollbar"
+          >
+            <div
+              class="overflow-hidden"
+              (drop)="onDrop($event, 'Open')"
+              (dragover)="onDragOver($event)"
+            >
+              <h2 class="text-lg mb-3 font-semibold">
+                Open -
+                <span class="text-gray-400"
+                  >{{ filterTasks("Open").length }} tasks</span
+                >
+              </h2>
+              <div
+                class="bg-slate-50 rounded p-2 mb-2 flex justify-between cursor-grab overflow-hidden"
+                *ngFor="let task of filterTasks('Open'); let taskIndex = index"
+                (dragstart)="onDragStart(task)"
+                draggable="true"
+              >
+                <div class="cursor-grab flex flex-col flex-wrap">
+                  <span class="font-semibold"> {{ task.title }}</span>
+                  <br />
+                  <span class="">
+                    {{ task.description | truncate : 20 }}
+                  </span>
+                </div>
+                <div class="ml-4 flex flex-col gap-1 cursor-default">
+                  <i
+                    class="fas fa-edit"
+                    (click)="onEdit(task, task.title)"
+                    style="color: blue"
+                  ></i>
+                  <i
+                    (click)="deleteTask(task.title)"
+                    class="fas fa-trash"
+                    style="color: red"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md columnWrap no-scrollbar"
+          >
+            <div
+              class="overflow-hidden"
+              (drop)="onDrop($event, 'Pending')"
+              (dragover)="onDragOver($event)"
+            >
+              <h2 class="text-lg mb-3 font-semibold">
+                Pending -
+                <span class="text-gray-400"
+                  >{{ filterTasks("Pending").length }} tasks</span
+                >
+              </h2>
+              <div
+                class="bg-slate-50 rounded p-2 mb-2 flex justify-between cursor-grab"
+                *ngFor="
+                  let task of filterTasks('Pending');
+                  let taskIndex = index
+                "
+                (dragstart)="onDragStart(task)"
+                draggable="true"
+              >
+                <div class="cursor-grab">
+                  <span class="font-semibold"> {{ task.title }}</span>
+                  <br />
+                  {{ task.description | truncate : 20 }}
+                </div>
+                <div class="ml-4 flex flex-col gap-1 cursor-default">
+                  <i
+                    class="fas fa-edit"
+                    (click)="onEdit(task, task.title)"
+                    style="color: blue"
+                  ></i>
+                  <i
+                    (click)="deleteTask(task.title)"
+                    class="fas fa-trash"
+                    style="color: red"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md columnWrap no-scrollbar"
+          >
+            <div
+              class="overflow-hidden"
+              (drop)="onDrop($event, 'In Progress')"
+              (dragover)="onDragOver($event)"
+            >
+              <h2 class="text-lg mb-3 font-semibold">
+                In Progress -
+                <span class="text-gray-400"
+                  >{{ filterTasks("In Progress").length }} tasks</span
+                >
+              </h2>
+              <div
+                class="bg-slate-50 rounded p-2 mb-2 flex justify-between cursor-grab"
+                *ngFor="
+                  let task of filterTasks('In Progress');
+                  let taskIndex = index
+                "
+                (dragstart)="onDragStart(task)"
+                draggable="true"
+              >
+                <div class="cursor-grab">
+                  <span class="font-semibold"> {{ task.title }}</span>
+                  <br />
+                  {{ task.description | truncate : 20 }}
+                </div>
+                <div class="ml-4 flex flex-col gap-1 cursor-default">
+                  <i
+                    class="fas fa-edit"
+                    (click)="onEdit(task, task.title)"
+                    style="color: blue"
+                  ></i>
+                  <i
+                    (click)="deleteTask(task.title)"
+                    class="fas fa-trash"
+                    style="color: red"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex-1 bg-slate-200 rounded-md mr-5 p-3 shadow-md columnWrap no-scrollbar"
+          >
+            <div
+              class="overflow-hidden"
+              (drop)="onDrop($event, 'Completed')"
+              (dragover)="onDragOver($event)"
+            >
+              <h2 class="text-lg mb-3 font-semibold">
+                Completed -
+                <span class="text-gray-400"
+                  >{{ filterTasks("Completed").length }} tasks</span
+                >
+              </h2>
+              <div
+                class="bg-slate-50 rounded p-2 mb-2 flex justify-between cursor-grab"
+                *ngFor="
+                  let task of filterTasks('Completed');
+                  let taskIndex = index
+                "
+                (dragstart)="onDragStart(task)"
+                draggable="true"
+              >
+                <div class="cursor-grab">
+                  <span class="font-semibold"> {{ task.title }}</span>
+                  <br />
+                  {{ task.description | truncate : 20 }}
+                </div>
+                <div class="ml-4 flex flex-col gap-1 cursor-default">
+                  <i
+                    class="fas fa-edit"
+                    (click)="onEdit(task, task.title)"
+                    style="color: blue"
+                  ></i>
+                  <i
+                    (click)="deleteTask(task.title)"
+                    class="fas fa-trash"
+                    style="color: red"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
