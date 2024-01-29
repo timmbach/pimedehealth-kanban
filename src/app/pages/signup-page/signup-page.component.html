@@ -1,0 +1,44 @@
+<div class="flex w-full items-center justify-center min-h-screen">
+  <div class="max-w-lg w-full p-6 bg-white rounded-md shadow-md">
+    <h1 class="text-2xl font-semibold mb-4">Sign up</h1>
+
+    <!-- Login Form -->
+    <div>
+      <div class="mb-4">
+        <label for="username" class="block text-sm font-medium text-gray-600"
+          >Email</label
+        >
+        <input
+          #emailInput
+          type="email"
+          id="email"
+          name="email"
+          class="mt-1 p-2 w-full border rounded-md"
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-600"
+          >Password</label
+        >
+        <input
+          #passwordInput
+          type="password"
+          id="password"
+          name="password"
+          class="mt-1 p-2 w-full border rounded-md"
+          placeholder="Enter password"
+        />
+      </div>
+
+      <button
+        class="bg-slate-400 text-black font-semibold px-4 py-2 rounded-md hover:bg-slate-500"
+        (click)="onSignupClicked(emailInput.value, passwordInput.value)"
+      >
+        Signup
+      </button>
+    </div>
+    <!-- End Login Form -->
+  </div>
+</div>

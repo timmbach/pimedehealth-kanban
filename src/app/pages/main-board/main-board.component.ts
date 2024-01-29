@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { ITask } from 'src/app/model/task';
 import { TaskService } from 'src/app/task.service';
 
@@ -223,12 +224,18 @@ export class MainBoardComponent implements OnInit {
     },
   ];
 
+  // tasks: ITask[] = [];
+
   constructor(private fb: FormBuilder, private taskService: TaskService) {}
   ngOnInit(): void {
     this.newTaskForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       dueDate: ['', Validators.required],
+    });
+
+    this.taskService.getTasks().subscribe((tasks: ITask[]) => {
+      this.tasks = tasks;
     });
   }
 
@@ -253,6 +260,10 @@ export class MainBoardComponent implements OnInit {
         .subscribe((response: any) => {
           console.log(response);
         });
+
+      this.taskService.getTasks().subscribe((tasks: ITask[]) => {
+        this.tasks = tasks;
+      });
       this.duplicateTaskError = '';
       this.newTaskForm.reset();
     }
