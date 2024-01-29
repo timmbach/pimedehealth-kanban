@@ -5,6 +5,11 @@ import { MainBoardComponent } from './pages/main-board/main-board.component';
 const routes: Routes = [
   {
     path: '',
+    redirectTo: '/tasks',
+    pathMatch: 'full',
+  },
+  {
+    path: 'tasks',
     component: MainBoardComponent,
   },
 ];

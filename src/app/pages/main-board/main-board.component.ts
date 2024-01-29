@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITask } from 'src/app/model/task';
+import { TaskService } from 'src/app/task.service';
 
 @Component({
   selector: 'app-main-board',
@@ -222,7 +223,7 @@ export class MainBoardComponent implements OnInit {
     },
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private taskService: TaskService) {}
   ngOnInit(): void {
     this.newTaskForm = this.fb.group({
       title: ['', Validators.required],
@@ -236,12 +237,22 @@ export class MainBoardComponent implements OnInit {
     if (existingTask) {
       this.duplicateTaskError = 'Task already exists!';
     } else {
-      this.tasks.push({
-        title: this.newTaskForm.value.title,
-        description: this.newTaskForm.value.description,
-        status: 'Open',
-        dueDate: this.newTaskForm.value.dueDate,
-      });
+      // this.tasks.push({
+      //   title: this.newTaskForm.value.title,
+      //   description: this.newTaskForm.value.description,
+      //   status: 'Open',
+      //   dueDate: this.newTaskForm.value.dueDate,
+      // });
+      this.taskService
+        .createTask({
+          title: this.newTaskForm.value.title,
+          description: this.newTaskForm.value.description,
+          status: 'Open',
+          dueDate: this.newTaskForm.value.dueDate,
+        })
+        .subscribe((response: any) => {
+          console.log(response);
+        });
       this.duplicateTaskError = '';
       this.newTaskForm.reset();
     }
